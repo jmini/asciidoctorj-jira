@@ -1,0 +1,4 @@
+:jira-server: https://issues.jenkins-ci.org/
+:jira-type: link-new-window
+
+I have created issue jira:JENKINS-57098[] to discuss it.

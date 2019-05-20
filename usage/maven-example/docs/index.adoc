@@ -1,0 +1,7 @@
+:jira-server: https://issues.jenkins-ci.org/
+
+= Example built with maven
+
+At the time of writing this was the jira:JENKINS-57550[newest issue].
+
+I have created issue jira:JENKINS-57098[].

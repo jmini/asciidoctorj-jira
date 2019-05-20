@@ -1,0 +1,6 @@
+:jira-server-JENKINS: https://issues.jenkins-ci.org
+:jira-server: https://jira.sonarsource.com/
+:jira-type: link-new-window
+
+At the time of writing the newest issues were:
+jira:MNG-6581[server="https://issues.apache.org/jira/"], jira:JENKINS-57550[], jira:SONARJAVA-3105[] and jira:SONARPHP-880[]

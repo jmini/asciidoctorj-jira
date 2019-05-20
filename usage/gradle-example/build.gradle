@@ -1,0 +1,37 @@
+plugins {
+    id 'org.asciidoctor.convert' version '1.5.9.1'
+}
+
+wrapper {
+    gradleVersion = '5.0'
+}
+
+group = 'fr.jmini.example'
+version = '1.0.0-SNAPSHOT'
+
+asciidoctorj {
+    version = '1.6.1'
+}
+
+// tag::task[]
+asciidoctor {
+    sourceDir = file('docs')
+    sources {
+        include 'index.adoc'
+    }     
+    outputDir = file('build/generated-docs')
+    attributes = ['project-version'      : "$version",
+                  'jira-server'          : 'https://jira.sonarsource.com/', // <2>
+                  'toc'                  : 'left',
+                  'icons'                : 'font',
+                  'sectanchors'          : 'true',
+                  'idprefix'             : '',
+                  'idseparator'          : '-']
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        asciidoctor 'fr.jmini.asciidoctorj:jira:1.0.0' // <1>
+    }
+}
+// end::task[]

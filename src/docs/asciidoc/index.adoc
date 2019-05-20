@@ -1,0 +1,196 @@
+:rootdir: ../../..
+:github-readme: {rootdir}/README.adoc
+:srcdir: {rootdir}/src/
+:listing-caption: Listing
+:xrefstyle: short
+:revdate: {project-builddate}
+:revnumber: {project-version}
+
+include::{github-readme}[tags=vardef]
+
+:projectpage: https://github.com/{gh-repo-owner}/{gh-repo-name}
+
+include::{github-readme}[tags=header]
+
+== URLs
+
+* link:{homepage}[Project home] (this page)
+* link:{projectpage}[GitHub project]
+* link:{issues}[Issue tracker]
+
+TIP: Do you want to improve this page? Please git-link:self[edit it on GitHub, edit].
+
+== Description
+
+This extension creates links to issues on a jira server, based on its identifier.
+
+=== Target
+
+The target is the jira identifier itself (`JENKINS-57098` for the Jenkins Jira for example).
+This is mandatory.
+
+=== Parameters
+
+The macro supports following parameters that can be used as named parameters (no matter the order) or as ordered parameters:
+
+1. `text`: link text.
+2. `type`: type of link, see <<config-type>> for details.
+3. `server`: jira server, see <<config-server>> for details.
+
+[[config-server]]
+=== Specifying the server
+
+The jira server needs to be specified.
+This is possible with the `server` parameter in the macro.
+An other possibility is to use `jira-server` in the document in order to do this only once.
+
+If you are mixing different jira issues coming from different jira servers, you can define different document attributes: `jira-server-<prefix>` where `<prefix>` is the prefix of the issue identifier (if you are referring to an issue identified as `TASK-1234` you can define the server with `jira-server-task`).
+
+[[config-type]]
+=== Specifying the type
+
+To specify the type that need to be created, the `type` parameter can be used, or globally `jira-type` can be defined in the document.
+
+Possible values:
+
+* `link`: a link is created (this is the default)
+* `link-new-window`: same as `link`, but the link are opened in a new window.
+* `text`: only a text is created (this is the fallback when the server is not defined). This can also be used if the jira server is not available publicly.
+
+== Examples
+
+<<lst-simple>> demonstrates a simple usage of the macro.
+Server and type are specified on the document (so that they are shared for all macro usage).
+In this example, the `jira:` macro is used without any additional arguments.
+
+[[lst-simple]]
+.Simple usage
+[source,asciidoc]
+----
+include::{srcdir}test/resources/test_simple.adoc[]
+----
+
+.Output (simple usage)
+====
+include::{srcdir}test/resources/test_simple.adoc[]
+====
+
+<<lst-specific>> shows that different jira server urls can be used.
+First option is to define it as parameter of the macro, but in this case you need to do it each time you call the `jira:` macro.
+Second option is to define it at document level. 
+Either with `jira-server` (default for all issues) or with `jira-server-jenkins` which will be used for all `JENKINS-xxx` issues.
+
+[[lst-specific]]
+.Define specific servers for the different issues
+[source,asciidoc]
+----
+include::{srcdir}test/resources/test_specific_servers.adoc[]
+----
+
+.Output (specific servers)
+====
+include::{srcdir}test/resources/test_specific_servers.adoc[]
+====
+
+<<lst-inline>> is an example of the macro usage with only inlined parameters.
+It is using ordered parameters, but you can also used named parameters if you prefer.
+
+[[lst-inline]]
+.Inline parameters
+[source,asciidoc]
+----
+include::{srcdir}test/resources/test_inline_ordered_param.adoc[]
+----
+
+.Output (inline parameters)
+====
+include::{srcdir}test/resources/test_inline_ordered_param.adoc[]
+====
+
+== Usage
+
+The extension is published on maven central and can be directly consumed from maven or gradle.
+
+include::{rootdir}/usage/maven-example/README.adoc[leveloffset=1, tags=maven-integration]
+
+For a complete example, see: git-link:usage/maven-example/pom.xml[pom.xml, branch="master"]
+
+include::{rootdir}/usage/gradle-example/README.adoc[leveloffset=1, tags=gradle-integration]
+
+For a complete example, see: git-link:usage/gradle-example/build.gradle[build.gradle, branch="master"]
+
+=== Asciidoctorj version
+
+The latest version of this extension is built and tested with version `{asciidoctorj-version}` of `org.asciidoctor:asciidoctorj`.
+
+== Source Code
+
+As for any grade plugin, the source code of the plugin is available in the git-link:src/[src/] folder.
+
+=== Build
+
+This project is using gradle.
+
+Command to build the sources locally:
+
+----
+./gradlew build
+----
+
+Command to deploy to your local maven repository:
+
+----
+./gradlew publishToMavenLocal
+----
+
+Command to build the documentation page:
+
+----
+./gradlew asciidoctor
+----
+
+The output of this command is an HTML page located at `<git repo root>/build/docs/html5/index.html`.
+
+==== For project maintainers
+
+`signing.gnupg.keyName` and `signing.gnupg.passphrase` are expected to be set in your local `gradle.properties` file to be able to sign.
+`sonatypeUser` and `sonatypePassword` are expected to be set in order to be able to publish to a distant repository.
+					
+Command to build and publish the result in a distant maven repository:
+
+----
+./gradlew publish
+----
+
+Command to upload the documentation page on GitHub pages:
+
+----
+./gradlew gitPublishPush
+----
+
+Command to perform a release:
+
+----
+./gradlew release -Prelease.useAutomaticVersion=true
+----
+
+==== Using ssh-agent
+
+Some tasks requires pushing into the distant git repository (release task or updating the `gh-pages` branch).
+If they are failing with errors like this:
+----
+org.eclipse.jgit.api.errors.TransportException: ... Permission denied (publickey).
+---- 
+
+Then `ssh-agent` can be used.
+----
+eval `ssh-agent -s`
+ssh-add ~/.ssh/id_rsa
+----
+(link:https://superuser.com/a/990447/[source] for this approach)
+
+
+include::{github-readme}[tags=contact-section]
+
+include::{github-readme}[tags=license-section]
+

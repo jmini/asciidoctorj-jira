@@ -1,0 +1,5 @@
+= Example built with gradle
+
+At the time of writing this was the jira:SONARJAVA-3105[newest issue].
+
+jira:SONARJAVA-2916[] is an issue I helped to create.
