@@ -8,53 +8,63 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Asciidoctor.Factory;
 import org.asciidoctor.AttributesBuilder;
 import org.asciidoctor.OptionsBuilder;
 import org.asciidoctor.SafeMode;
+import org.asciidoctor.log.LogRecord;
 import org.junit.jupiter.api.Test;
 
 public class JiraLinkTest {
 
     @Test
     public void testInlineNamedParam() throws Exception {
-        runTest("test_inline_named_param");
+        List<LogRecord> logs = runTest("test_inline_named_param");
+        assertThat(logs).isEmpty();
     }
 
     @Test
     public void testInlineOrderedParam() throws Exception {
-        runTest("test_inline_ordered_param");
+        List<LogRecord> logs = runTest("test_inline_ordered_param");
+        assertThat(logs).isEmpty();
     }
 
     @Test
     public void testMissingServer() throws Exception {
-        runTest("test_missing_server");
+        List<LogRecord> logs = runTest("test_missing_server");
+        assertThat(logs).isEmpty();
     }
 
     @Test
     public void testSimple() throws Exception {
-        runTest("test_simple");
+        List<LogRecord> logs = runTest("test_simple");
+        assertThat(logs).isEmpty();
     }
 
     @Test
     public void testSpecificServers() throws Exception {
-        runTest("test_specific_servers");
+        List<LogRecord> logs = runTest("test_specific_servers");
+        assertThat(logs).isEmpty();
     }
 
     @Test
     public void testText() throws Exception {
-        runTest("test_text");
+        List<LogRecord> logs = runTest("test_text");
+        assertThat(logs).isEmpty();
     }
 
-    private void runTest(String fileName) throws IOException, URISyntaxException {
+    private List<LogRecord> runTest(String fileName) throws IOException, URISyntaxException {
         Path exampleFolder = Paths.get("src/test/resources/")
                 .toAbsolutePath();
         String content = new String(Files.readAllBytes(exampleFolder.resolve(fileName + ".adoc")), StandardCharsets.UTF_8);
         String expected = new String(Files.readAllBytes(exampleFolder.resolve(fileName + ".html")), StandardCharsets.UTF_8);
 
         Asciidoctor asciidoctor = Factory.create();
+        InMemoryLogHanlder logHandler = new InMemoryLogHanlder();
+        asciidoctor.registerLogHandler(logHandler);
 
         AttributesBuilder attributesBuilder = AttributesBuilder.attributes()
                 .setAnchors(false)
@@ -68,5 +78,7 @@ public class JiraLinkTest {
         String html = asciidoctor.convert(content, optionsBuilder);
 
         assertThat(html).isEqualTo(expected);
+
+        return logHandler.getLogs();
     }
 }
