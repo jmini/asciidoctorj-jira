@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.asciidoctor.ast.ContentNode;
-import org.asciidoctor.ast.PhraseNode;
 import org.asciidoctor.extension.InlineMacroProcessor;
 
 import fr.jmini.asciidoctorj.jira.internal.JiraLink;
@@ -28,7 +27,7 @@ public class JiraLinkMacro extends InlineMacroProcessor {
         JiraLink link = JiraLinkUtility.compute(target, linkText, type, server);
 
         if (link.getUrl() == null) {
-            return link.getText();
+            return createPhraseNode(parent, "quoted", link.getText(), attributes, new HashMap<String, Object>());
         } else {
             // Define options for an 'anchor' element:
             Map<String, Object> options = new HashMap<String, Object>();
@@ -41,10 +40,7 @@ public class JiraLinkMacro extends InlineMacroProcessor {
             }
 
             // Create the 'anchor' node:
-            PhraseNode inline = createPhraseNode(parent, "anchor", link.getText(), attributes, options);
-
-            // Convert to String value:
-            return inline.convert();
+            return createPhraseNode(parent, "anchor", link.getText(), attributes, options);
         }
     }
 

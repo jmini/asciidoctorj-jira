@@ -119,9 +119,17 @@ include::{rootdir}/usage/gradle-example/README.adoc[leveloffset=1, tags=gradle-i
 
 For a complete example, see: git-link:usage/gradle-example/build.gradle[build.gradle, branch="master"]
 
-=== Asciidoctorj version
+=== AsciidoctorJ version
 
 The latest version of this extension is built and tested with version `{asciidoctorj-version}` of `org.asciidoctor:asciidoctorj`.
+If you are using an older version of AsciidoctorJ, you can use an older version of this plugin:
+
+[cols="2*^"]
+|===
+| Asciidoctorj version | {project-name} version
+| `1.6.x` | `1.0.1`
+| `2.0.x` | `1.1.0`
+|===
 
 == Source Code
 
@@ -156,10 +164,10 @@ The output of this command is an HTML page located at `<git repo root>/build/doc
 `signing.gnupg.keyName` and `signing.gnupg.passphrase` are expected to be set in your local `gradle.properties` file to be able to sign.
 `sonatypeUser` and `sonatypePassword` are expected to be set in order to be able to publish to a distant repository.
 					
-Command to build and publish the result in a distant maven repository:
+Command to build and publish the result to maven central:
 
 ----
-./gradlew publish
+./gradlew publishToNexus
 ----
 
 Command to upload the documentation page on GitHub pages:
