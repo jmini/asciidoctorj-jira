@@ -16,6 +16,7 @@ import org.asciidoctor.AttributesBuilder;
 import org.asciidoctor.OptionsBuilder;
 import org.asciidoctor.SafeMode;
 import org.asciidoctor.log.LogRecord;
+import org.asciidoctor.log.Severity;
 import org.junit.jupiter.api.Test;
 
 public class JiraLinkTest {
@@ -35,7 +36,15 @@ public class JiraLinkTest {
     @Test
     public void testMissingServer() throws Exception {
         List<LogRecord> logs = runTest("test_missing_server");
-        assertThat(logs).isEmpty();
+        assertThat(logs).hasSize(2);
+
+        LogRecord log1 = logs.get(0);
+        assertThat(log1.getSeverity()).isEqualTo(Severity.WARN);
+        assertThat(log1.getMessage()).isEqualTo("jira: server is not defined");
+
+        LogRecord log2 = logs.get(1);
+        assertThat(log2.getSeverity()).isEqualTo(Severity.WARN);
+        assertThat(log2.getMessage()).isEqualTo("jira: server is not defined");
     }
 
     @Test

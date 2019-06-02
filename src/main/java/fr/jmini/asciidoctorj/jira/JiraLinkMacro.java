@@ -2,11 +2,14 @@ package fr.jmini.asciidoctorj.jira;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.extension.InlineMacroProcessor;
+import org.asciidoctor.log.LogRecord;
+import org.asciidoctor.log.Severity;
 
 import fr.jmini.asciidoctorj.jira.internal.JiraLink;
 import fr.jmini.asciidoctorj.jira.internal.JiraLinkUtility;
@@ -21,10 +24,12 @@ public class JiraLinkMacro extends InlineMacroProcessor {
 
     @Override
     public Object process(ContentNode parent, String target, Map<String, Object> attributes) {
+        Consumer<String> logger = (String message) -> log(new LogRecord(Severity.WARN, message));
+
         Object linkText = searchAttribute(attributes, "text", "1", parent, null);
         Object type = searchAttribute(attributes, "type", "2", parent, "jira-type");
         Object server = searchServerAttribute(parent, target, attributes);
-        JiraLink link = JiraLinkUtility.compute(target, linkText, type, server);
+        JiraLink link = JiraLinkUtility.compute(logger, target, linkText, type, server);
 
         if (link.getUrl() == null) {
             return createPhraseNode(parent, "quoted", link.getText(), attributes, new HashMap<String, Object>());

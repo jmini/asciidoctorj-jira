@@ -8,47 +8,61 @@ public class JiraLinkUtilityTest {
 
     @Test
     void testCompute() throws Exception {
-        JiraLink link1 = JiraLinkUtility.compute("TASK-123", null, "link", "https://jira.company.com");
+        MessageCollector collector1 = new MessageCollector();
+        JiraLink link1 = JiraLinkUtility.compute(collector1, "TASK-123", null, "link", "https://jira.company.com");
         assertThat(link1).isNotNull();
         assertThat(link1.getUrl()).isEqualTo("https://jira.company.com/browse/TASK-123");
         assertThat(link1.getText()).isEqualTo("TASK-123");
         assertThat(link1.getWindow()).isNull();
+        assertThat(collector1.getMessages()).isEmpty();
 
-        JiraLink link2 = JiraLinkUtility.compute("TASK-456", "this issue", "LINK", "https://jira.company.com/");
+        MessageCollector collector2 = new MessageCollector();
+        JiraLink link2 = JiraLinkUtility.compute(collector2, "TASK-456", "this issue", "LINK", "https://jira.company.com/");
         assertThat(link2).isNotNull();
         assertThat(link2.getUrl()).isEqualTo("https://jira.company.com/browse/TASK-456");
         assertThat(link2.getText()).isEqualTo("this issue");
         assertThat(link2.getWindow()).isNull();
+        assertThat(collector2.getMessages()).isEmpty();
 
-        JiraLink link3 = JiraLinkUtility.compute("TASK-789", "", "LINK-new-window", "https://dev.company.com/jira");
+        MessageCollector collector3 = new MessageCollector();
+        JiraLink link3 = JiraLinkUtility.compute(collector3, "TASK-789", "", "LINK-new-window", "https://dev.company.com/jira");
         assertThat(link3).isNotNull();
         assertThat(link3.getUrl()).isEqualTo("https://dev.company.com/jira/browse/TASK-789");
         assertThat(link3.getText()).isEqualTo("TASK-789");
         assertThat(link3.getWindow()).isEqualTo("_blank");
+        assertThat(collector3.getMessages()).isEmpty();
 
-        JiraLink link4 = JiraLinkUtility.compute("JENKINS-57098", null, "text", "https://dev.company.com/jira");
+        MessageCollector collector4 = new MessageCollector();
+        JiraLink link4 = JiraLinkUtility.compute(collector4, "JENKINS-57098", null, "text", "https://dev.company.com/jira");
         assertThat(link4).isNotNull();
         assertThat(link4.getUrl()).isNull();
         assertThat(link4.getText()).isEqualTo("JENKINS-57098");
         assertThat(link4.getWindow()).isNull();
+        assertThat(collector4.getMessages()).isEmpty();
 
-        JiraLink link5 = JiraLinkUtility.compute("JENKINS-57098", "this issue", "TEXT", "https://dev.company.com/jira");
+        MessageCollector collector5 = new MessageCollector();
+        JiraLink link5 = JiraLinkUtility.compute(collector5, "JENKINS-57098", "this issue", "TEXT", "https://dev.company.com/jira");
         assertThat(link5).isNotNull();
         assertThat(link5.getUrl()).isNull();
         assertThat(link5.getText()).isEqualTo("this issue");
         assertThat(link5.getWindow()).isNull();
+        assertThat(collector5.getMessages()).isEmpty();
 
-        JiraLink linkMissingServer = JiraLinkUtility.compute("TEST-1234", "this issue", "LINK", null);
+        MessageCollector collector6 = new MessageCollector();
+        JiraLink linkMissingServer = JiraLinkUtility.compute(collector6, "TEST-1234", "this issue", "LINK", null);
         assertThat(linkMissingServer).isNotNull();
         assertThat(linkMissingServer.getUrl()).isNull();
         assertThat(linkMissingServer.getText()).isEqualTo("this issue");
         assertThat(linkMissingServer.getWindow()).isNull();
+        assertThat(collector6.getMessages()).containsExactly("jira: server is not defined");
 
-        JiraLink linkEmptyServer = JiraLinkUtility.compute("TEST-1234", null, "LINK", "");
+        MessageCollector collector7 = new MessageCollector();
+        JiraLink linkEmptyServer = JiraLinkUtility.compute(collector7, "TEST-1234", null, "LINK", "");
         assertThat(linkEmptyServer).isNotNull();
         assertThat(linkEmptyServer.getUrl()).isNull();
         assertThat(linkEmptyServer.getText()).isEqualTo("TEST-1234");
         assertThat(linkEmptyServer.getWindow()).isNull();
+        assertThat(collector7.getMessages()).containsExactly("jira: server is empty");
     }
 
     @Test
