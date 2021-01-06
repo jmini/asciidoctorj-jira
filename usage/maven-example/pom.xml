@@ -22,9 +22,9 @@
         <version>${asciidoctor.maven.plugin.version}</version>
         <dependencies>
           <dependency> <!--1-->
-            <version>1.1.0</version>
             <groupId>fr.jmini.asciidoctorj</groupId>
             <artifactId>jira</artifactId>
+            <version>1.1.0</version>
           </dependency>
           <!-- ... (other dependencies) -->
 <!-- end::mvn-plugin[] -->
