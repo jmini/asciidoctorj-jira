@@ -121,15 +121,9 @@ For a complete example, see: git-link:usage/gradle-example/build.gradle[build.gr
 
 === AsciidoctorJ version
 
-The latest version of this extension is built and tested with version `{asciidoctorj-version}` of `org.asciidoctor:asciidoctorj`.
-If you are using an older version of AsciidoctorJ, you can use an older version of this plugin:
+This extension is compatible with `org.asciidoctor:asciidoctorj` in range `{asciidoctorj-version}`.
 
-[cols="2*^"]
-|===
-| Asciidoctorj version | {project-name} version
-| `1.6.x` | `1.0.1`
-| `2.0.x` | `1.1.0`
-|===
+The continuous integration server runs the test suite with different AsciidoctorJ versions within this range.
 
 == Download
 
